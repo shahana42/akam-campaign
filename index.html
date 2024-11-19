@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Poster Creator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #007BFF;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding-left: 40px;
+            padding-right: 40px;
+
+        }
+
+        .header {
+            background-color: #e3f6fd;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content h2 {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .content p {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .content input {
+            width: 90%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .content input:focus {
+            border-color: #007BFF;
+        }
+
+        .content button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .content button:hover {
+            background-color: #0056b3;
+        }
+
+        .poster-preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .poster-preview canvas {
+            width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .poster-preview a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: background-color 0.3s ease;
+        }
+
+        .poster-preview a:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .file-input {
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 30px;
+            color: black;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .custom-file-upload {
+        display: inline-block;
+        position: relative;
+    }
+    .upload-button {
+        color: #007BFF; 
+        font-weight: bold; 
+        font-size: 16px; 
+        padding: 10px 20px;
+        border: 1px solid #007BFF; 
+        border-radius: 5px;
+        text-align: center;
+        display: inline-block;
+        cursor: pointer; 
+        margin-bottom: 10px;
+    }
+    .upload-button:hover {
+        background-color: #007BFF; 
+        color: white; 
+    }
+    .file-input {
+        display: none; 
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Input Form -->
+        <div id="inputPage" class="content">
+            <div class="header">
+                <img src="image/akam.jpg" alt="Campaign Banner">
+            </div>
+            <h2>Create Personalized Poster to Support the Campaign</h2>
+            <p>അകം 
+                organisation campaign 
+                2024 ഒക്ടോബർ -2025 ഫെബ്രുവരി 
+            </p>
+            <p>Create and download your poster with your own image</p>
+            <input type="text" id="nameInput" placeholder="Name">
+            <input type="text" id="panchayatInput" placeholder="Panchayat">
+            <div class="custom-file-upload">
+                <label class="upload-button">
+                    Upload Image
+                    <input type="file" id="imageInput" class="file-input" accept="image/*">
+                </label>
+            </div>
+          
+                      <button id="createButton">CREATE</button>
+            <div id="errorMessage" class="error-message"></div> <!-- Error message -->
+        </div>
+
+        <!-- Poster Preview -->
+        <div id="posterPage" class="content hidden">
+            <h2>Your Personalized Campaign Poster</h2>
+            <p>Here is your personalized poster based on the information you provided.</p>
+            <div class="poster-preview">
+                <canvas id="posterCanvas"></canvas>
+                <a id="downloadLink" download="personalized-poster.png">Download Poster</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const createButton = document.getElementById('createButton');
+        const nameInput = document.getElementById('nameInput');
+        const panchayatInput = document.getElementById('panchayatInput');
+        const imageInput = document.getElementById('imageInput');
+        const inputPage = document.getElementById('inputPage');
+        const posterPage = document.getElementById('posterPage');
+        const posterCanvas = document.getElementById('posterCanvas');
+        const downloadLink = document.getElementById('downloadLink');
+        const errorMessage = document.getElementById('errorMessage');
+
+        createButton.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const panchayat = panchayatInput.value.trim();
+            const imageFile = imageInput.files[0];
+
+            // Reset error message
+            errorMessage.textContent = '';
+
+            // Validation
+            if (!name || !panchayat || !imageFile) {
+                errorMessage.textContent = 'Please fill in all fields and upload an image.';
+                return;
+            }
+
+            // Hide input page and show poster preview page
+            inputPage.classList.add('hidden');
+            posterPage.classList.remove('hidden');
+
+            // Set up the canvas
+            const canvas = posterCanvas;
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400;
+            canvas.height = 600;
+
+            // Draw background
+            ctx.fillStyle = '#e3f6fd';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw uploaded image
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    // Draw image onto the canvas
+                    ctx.drawImage(img, 20, 20, canvas.width - 40, 200);
+
+                    // Add text
+                    ctx.font = '20px Arial';
+                    ctx.fillStyle = '#333';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('അകം  സംഘടന  ക്യാമ്പയിൻ  2024  ഒക്ടോബർ  2025 ഫെബ്രുവരി ', canvas.width / 2, 250);
+
+                    ctx.font = '18px Arial';
+                    ctx.fillStyle = '#555';
+                    ctx.fillText(`Name: ${name}`, canvas.width / 2, 300);
+                    ctx.fillText(`Panchayath: ${panchayat}`, canvas.width / 2, 340);
+
+                    // Enable download link
+                    downloadLink.href = canvas.toDataURL('image/png');
+                };
+            };
+
+            reader.readAsDataURL(imageFile);
+        });
+    </script>
+</body>
+</html>
