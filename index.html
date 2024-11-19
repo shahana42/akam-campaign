@@ -3,245 +3,286 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Campaign Poster Creator</title>
-    <style>
-      body {
-        font-family: "Arial", sans-serif;
-        background-color: #a1d6e2;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 10px;
-      }
+<style>
+  body {
+    font-family: "Arial", sans-serif;
+    background-color: #a1d6e2;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+  }
 
-      .container {
-        background-color: white;
-        width: 90%;
-        max-width: 400px;
-        border-radius: 20px;
-        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-        overflow: hidden;
-        padding: 10px;
-        height: 627px;
-      }
+  .container {
+    background-color: white;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 20px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    padding: 10px;
+    height: auto;
+  }
 
-      .header {
-        text-align: center;
-        height: 200px;
-      }
+  .header {
+    text-align: center;
+    height: 250px;
+  }
 
-      .header img {
-        width: 100%;
-        border-radius: 10px;
-        height: 100%;
-        object-fit: cover;
-      }
+  .header img {
+    width: 100%;
+    border-radius: 10px;
+    height: 100%;
+    object-fit: cover;
+  }
 
-      .content {
-        padding: 20px;
-        text-align: center;
-      }
+  .content {
+    padding: 20px;
+    text-align: center;
+  }
 
-      .content h2 {
-        font-size: 18px;
-        color: #333;
-        margin: 10px 0;
-      }
+  .content h2 {
+    font-size: 18px;
+    color: #333;
+    margin: 10px 0;
+  }
 
-      .content p {
-        font-size: 16px;
-        color: #555;
-        margin: 10px 0;
-      }
+  .content p {
+    font-size: 16px;
+    color: #555;
+    margin: 10px 0;
+  }
 
-      .content input {
-        width: 90%;
-        padding: 12px 15px;
-        margin: 10px 0;
-        border: 2px solid #ddd;
-        border-radius: 30px;
-        font-size: 16px;
-        outline: none;
-        text-align: center;
-        transition: border-color 0.3s ease;
-      }
+  .content input {
+    width: 90%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 30px;
+    font-size: 16px;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.3s ease;
+  }
 
-      .content input:focus {
-        border-color: #1995ad;
-      }
+  .content input:focus {
+    border-color: #1995ad;
+  }
 
-      .content button {
-        width: 100%;
-        padding: 12px;
-        background-color: #1995ad;
-        color: white;
-        font-size: 16px;
-        border: none;
-        border-radius: 30px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
+  .content button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1995ad;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-      .content button:hover {
-        background-color: #157788;
-      }
+  .content button:hover {
+    background-color: #157788;
+  }
 
-      .poster-preview {
-        margin-top: 20px;
-        text-align: center;
-      }
+  .poster-preview {
+    margin-top: 20px;
+    text-align: center;
+  }
 
-      .poster-preview canvas {
-        width: 100%;
-        border: 2px solid #ddd;
-        border-radius: 10px;
-      }
+  .poster-preview canvas {
+    width: 100%;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+  }
 
-      .poster-preview a {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #1995ad;
-        color: white;
-        text-decoration: none;
-        border-radius: 30px;
-        transition: background-color 0.3s ease;
-      }
+  .poster-preview a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #1995ad;
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+  }
 
-      .poster-preview a:hover {
-        background-color: #157788;
-      }
+  .poster-preview a:hover {
+    background-color: #157788;
+  }
 
-      .hidden {
-        display: none;
-      }
+  .hidden {
+    display: none;
+  }
 
-      .file-input {
-        padding: 10px 15px;
-        margin: 10px 0;
-        border-radius: 30px;
-        color: black;
-      }
+  .file-input {
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 30px;
+    color: black;
+  }
 
-      .error-message {
-        color: red;
-        font-size: 14px;
-        margin-top: 10px;
-      }
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+  }
 
-      .custom-file-upload {
-        display: inline-block;
-        position: relative;
-      }
+  .custom-file-upload {
+    display: inline-block;
+    position: relative;
+  }
 
-      .upload-button {
-        color: #1995ad;
-        font-weight: bold;
-        font-size: 16px;
-        padding: 10px 20px;
-        border: 1px solid #1995ad;
-        border-radius: 5px;
-        text-align: center;
-        display: inline-block;
-        cursor: pointer;
-        margin-bottom: 10px;
-      }
+  .upload-button {
+    color: #1995ad;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: 1px solid #1995ad;
+    border-radius: 5px;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
 
-      .upload-button:hover {
-        background-color: #1995ad;
-        color: white;
-      }
+  .upload-button:hover {
+    background-color: #1995ad;
+    color: white;
+  }
 
-      .file-input {
-        display: none;
-      }
+  .file-input {
+    display: none;
+  }
 
-      @media (max-width: 768px) {
-        .container {
-          width: 95%;
-          height: auto;
-          padding: 20px;
-        }
+  /* Responsive Styles for Tablets and Larger Screens */
+  @media (max-width: 1024px) {
+    .container {
+      width: 90%;
+      padding: 20px;
+    }
 
-        .header {
-          height: 180px;
-        }
+    .header {
+      height: 250px;
+    }
 
-        .header img {
-          height: 100%;
-        }
+    .header img {
+      height: 100%;
+    }
 
-        .content h2 {
-          font-size: 16px;
-        }
+    .content h2 {
+      font-size: 16px;
+    }
 
-        .content p {
-          font-size: 14px;
-        }
+    .content p {
+      font-size: 14px;
+    }
 
-        .content input {
-          font-size: 14px;
-          padding: 10px;
-        }
+    .content input {
+      font-size: 14px;
+      padding: 10px;
+    }
 
-        .content button {
-          font-size: 14px;
-        }
+    .content button {
+      font-size: 14px;
+    }
 
-        .poster-preview canvas {
-          border-radius: 8px;
-        }
+    .poster-preview canvas {
+      border-radius: 8px;
+    }
 
-        .poster-preview a {
-          font-size: 14px;
-          padding: 8px 16px;
-        }
-      }
+    .poster-preview a {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
 
-      @media (max-width: 480px) {
-        .container {
-          width: 100%;
-          padding: 15px;
-        }
+  /* Responsive Styles for Small Screens (Mobile) */
+  @media (max-width: 768px) {
+    .container {
+      width: 95%;
+      height: auto;
+      padding: 20px;
+    }
 
-        .header {
-          height: 150px;
-        }
+    .header {
+      height: 180px;
+    }
 
-        .content h2 {
-          font-size: 14px;
-        }
+    .header img {
+      height: 100%;
+    }
 
-        .content p {
-          font-size: 12px;
-        }
+    .content h2 {
+      font-size: 14px;
+    }
 
-        .content input {
-          font-size: 12px;
-          padding: 8px;
-        }
+    .content p {
+      font-size: 12px;
+    }
 
-        .content button {
-          font-size: 12px;
-        }
+    .content input {
+      font-size: 12px;
+      padding: 8px;
+    }
 
-        .poster-preview a {
-          font-size: 12px;
-          padding: 6px 12px;
-        }
-      }
-    </style>
+    .content button {
+      font-size: 12px;
+    }
+
+    .poster-preview a {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+  }
+
+  /* Additional Styles for Extra Small Screens (Very Small Mobile) */
+  @media (max-width: 480px) {
+    .container {
+      width: 100%;
+      padding: 15px;
+    }
+
+    .header {
+      height: 150px;
+    }
+
+    .content h2 {
+      font-size: 14px;
+    }
+
+    .content p {
+      font-size: 12px;
+    }
+
+    .content input {
+      font-size: 12px;
+      padding: 8px;
+    }
+
+    .content button {
+      font-size: 12px;
+    }
+
+    .poster-preview a {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+  }
+</style>
+
   </head>
   <body>
     <div class="container">
       <!-- Input Form -->
       <form id="posterForm" class="content" enctype="multipart/form-data">
         <div class="header">
-          <img src="image/akam.jpg" alt="Campaign Banner" />
+          <img src="image/kmcc.jpg" alt="Campaign Banner" />
         </div>
         <h2>Create Personalized Poster to Support the Campaign</h2>
-        <p>അകം organisation campaign 2024 ഒക്ടോബർ -2025 ഫെബ്രുവരി</p>
+        <p>KMCC ഖത്തർ മലപ്പുറം മണ്ഡലം സമ്മേളനം </p>
         <p>Create and download your poster with your own image</p>
         <input type="text" id="nameInput" name="name" placeholder="Name" required />
         <input type="text" id="panchayatInput" name="panchayat" placeholder="Panchayat" required />
