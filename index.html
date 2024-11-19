@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -24,7 +23,7 @@
         box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
         overflow: hidden;
         padding: 10px;
-        height: 615px;
+        height: 627px;
       }
 
       .header {
@@ -237,15 +236,15 @@
   <body>
     <div class="container">
       <!-- Input Form -->
-      <div id="inputPage" class="content">
+      <form id="posterForm" class="content" enctype="multipart/form-data">
         <div class="header">
           <img src="image/akam.jpg" alt="Campaign Banner" />
         </div>
         <h2>Create Personalized Poster to Support the Campaign</h2>
         <p>അകം organisation campaign 2024 ഒക്ടോബർ -2025 ഫെബ്രുവരി</p>
         <p>Create and download your poster with your own image</p>
-        <input type="text" id="nameInput" placeholder="Name" />
-        <input type="text" id="panchayatInput" placeholder="Panchayat" />
+        <input type="text" id="nameInput" name="name" placeholder="Name" required />
+        <input type="text" id="panchayatInput" name="panchayat" placeholder="Panchayat" required />
         <div class="custom-file-upload">
           <label class="upload-button">
             Upload Image
@@ -254,13 +253,15 @@
               id="imageInput"
               class="file-input"
               accept="image/*"
+              name="image"
+              required
             />
           </label>
         </div>
 
-        <button id="createButton">CREATE</button>
+        <button type="submit" id="createButton">CREATE</button>
         <div id="errorMessage" class="error-message"></div>
-      </div>
+      </form>
 
       <!-- Poster Preview -->
       <div id="posterPage" class="content hidden">
@@ -283,72 +284,79 @@
       const nameInput = document.getElementById("nameInput");
       const panchayatInput = document.getElementById("panchayatInput");
       const imageInput = document.getElementById("imageInput");
-      const inputPage = document.getElementById("inputPage");
+      const posterForm = document.getElementById("posterForm");
       const posterPage = document.getElementById("posterPage");
-      const posterCanvas = document.getElementById("posterCanvas");
-      const downloadLink = document.getElementById("downloadLink");
       const errorMessage = document.getElementById("errorMessage");
+      const downloadLink = document.getElementById("downloadLink");
+      const posterCanvas = document.getElementById("posterCanvas");
 
-      createButton.addEventListener("click", () => {
-        const name = nameInput.value.trim();
-        const panchayat = panchayatInput.value.trim();
-        const imageFile = imageInput.files[0];
+      posterForm.addEventListener("submit", (e) => {
+        e.preventDefault();
 
-        // Reset error message
+        // Clear any previous error messages
         errorMessage.textContent = "";
 
-        // Validation
-        if (!name || !panchayat || !imageFile) {
-          errorMessage.textContent =
-            "Please fill in all fields and upload an image.";
+        // Validate the form
+        if (!imageInput.files.length) {
+          // Image is not uploaded, show an error message
+          errorMessage.textContent = "Please upload an image for the poster.";
           return;
         }
 
-        // Hide input page and show poster preview page
-        inputPage.classList.add("hidden");
-        posterPage.classList.remove("hidden");
+        if (posterForm.checkValidity()) {
+          const name = nameInput.value.trim();
+          const panchayat = panchayatInput.value.trim();
+          const imageFile = imageInput.files[0];
 
-        // Set up the canvas
-        const canvas = posterCanvas;
-        const ctx = canvas.getContext("2d");
-        canvas.width = 400;
-        canvas.height = 600;
+          // Hide input form and show the poster preview page
+          posterForm.classList.add("hidden");
+          posterPage.classList.remove("hidden");
 
-        // Draw background
-        ctx.fillStyle = "#e3f6fd";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+          // Set up the canvas
+          const canvas = posterCanvas;
+          const ctx = canvas.getContext("2d");
+          canvas.width = 400;
+          canvas.height = 600;
 
-        // Draw uploaded image
-        const reader = new FileReader();
+          // Draw background
+          ctx.fillStyle = "#e3f6fd";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        reader.onload = function (e) {
-          const img = new Image();
-          img.src = e.target.result;
-          img.onload = () => {
-            // Draw image onto the canvas
-            ctx.drawImage(img, 20, 20, canvas.width - 40, 200);
+          // Draw uploaded image
+          const reader = new FileReader();
 
-            // Add text
-            ctx.font = "20px Arial";
-            ctx.fillStyle = "#333";
-            ctx.textAlign = "center";
-            ctx.fillText(
-              "അകം  സംഘടന  ക്യാമ്പയിൻ   2024 ഒക്ടോബർ  2025 ഫെബ്രുവരി ",
-              canvas.width / 2,
-              250
-            );
+          reader.onload = function (e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+              // Draw image onto the canvas
+              ctx.drawImage(img, 20, 20, canvas.width - 40, 200);
 
-            ctx.font = "18px Arial";
-            ctx.fillStyle = "#555";
-            ctx.fillText(`Name: ${name}`, canvas.width / 2, 300);
-            ctx.fillText(`Panchayath: ${panchayat}`, canvas.width / 2, 340);
+              // Add text
+              ctx.font = "20px Arial";
+              ctx.fillStyle = "#333";
+              ctx.textAlign = "center";
+              ctx.fillText(
+                "അകം  संस्था  ക്യാമ്പയിൻ   2024 ഒക്ടോബർ  2025 ഫെബ്രുവരി ",
+                canvas.width / 2,
+                250
+              );
 
-            // Enable download link
-            downloadLink.href = canvas.toDataURL("image/png");
+              ctx.font = "18px Arial";
+              ctx.fillStyle = "#555";
+              ctx.fillText(`Name: ${name}`, canvas.width / 2, 300);
+              ctx.fillText(`Panchayath: ${panchayat}`, canvas.width / 2, 340);
+
+              // Enable download link
+              downloadLink.href = canvas.toDataURL("image/png");
+            };
           };
-        };
 
-        reader.readAsDataURL(imageFile);
+          reader.readAsDataURL(imageFile);
+        } else {
+          // Trigger HTML5 validation if form is not valid
+          posterForm.reportValidity();
+        }
       });
     </script>
   </body>
