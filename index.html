@@ -96,8 +96,7 @@
       .poster-container {
         position: relative;
         width: 100%;
-        height: 100%; /* Increased height for the poster container */
-
+        height: 100%;
         border-radius: 10px;
         display: flex;
         justify-content: center;
@@ -107,7 +106,7 @@
 
       .poster-preview canvas {
         width: 100%;
-        height: 100%; /* Ensure canvas stretches to fit container */
+        height: 100%;
         object-fit: contain;
         display: block;
       }
@@ -212,97 +211,91 @@
           >
         </div>
       </div>
+      
     </div>
 
     <script>
-      const createButton = document.getElementById("createButton");
-      const nameInput = document.getElementById("nameInput");
-      const panchayatInput = document.getElementById("panchayatInput");
-      const imageInput = document.getElementById("imageInput");
-      const posterForm = document.getElementById("posterForm");
-      const posterPage = document.getElementById("posterPage");
-      const errorMessage = document.getElementById("errorMessage");
-      const downloadLink = document.getElementById("downloadLink");
-      const posterCanvas = document.getElementById("posterCanvas");
+    posterForm.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-      posterForm.addEventListener("submit", (e) => {
-        e.preventDefault();
+  // Clear any previous error messages
+  errorMessage.textContent = "";
 
-        // Clear any previous error messages
-        errorMessage.textContent = "";
+  // Validate the form
+  if (!imageInput.files.length) {
+    errorMessage.textContent = "Please upload an image for the poster.";
+    return;
+  }
 
-        // Validate the form
-        if (!imageInput.files.length) {
-          errorMessage.textContent = "Please upload an image for the poster.";
-          return;
-        }
+  if (posterForm.checkValidity()) {
+    const name = nameInput.value.trim();
+    const panchayat = panchayatInput.value.trim();
+    const imageFile = imageInput.files[0];
 
-        if (posterForm.checkValidity()) {
-          const name = nameInput.value.trim();
-          const panchayat = panchayatInput.value.trim();
-          const imageFile = imageInput.files[0];
+    // Hide input form and show the poster preview page
+    posterForm.classList.add("hidden");
+    posterPage.classList.remove("hidden");
 
-          // Hide input form and show the poster preview page
-          posterForm.classList.add("hidden");
-          posterPage.classList.remove("hidden");
+    // Set up the canvas
+    const canvas = posterCanvas;
+    const ctx = canvas.getContext("2d");
+    canvas.width = 1000;
+    canvas.height = 1300;
 
-          // Set up the canvas
-          const canvas = posterCanvas;
-          const ctx = canvas.getContext("2d");
-          canvas.width = 1000; // Adjust to your preferred width
-          canvas.height = 1300; // Increased height for the poster
+    // Load the background image (your uploaded image)
+    const background = new Image();
+    background.src = "image/Artboard_2.png";
 
-          // Load the background image (your uploaded image)
-          const background = new Image();
-          background.src = "image/Artboard_2.png"; // Replace with the correct file path
+    background.onload = function () {
+      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-          background.onload = function () {
-            // Draw the background
-            ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+      // Draw the image frame
+      const frameX = 161; // X position of the frame
+      const frameY = 620; // Y position of the frame
+      const frameWidth = 255; // Width of the frame
+      const frameHeight = 280; // Height of the frame
+      ctx.strokeStyle = "#FFFFFF"; // Frame border color
+      ctx.lineWidth = 5; // Frame border thickness
+      ctx.strokeRect(frameX, frameY, frameWidth, frameHeight);
 
-            // Draw uploaded user image
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              const img = new Image();
-              img.src = e.target.result;
-              img.onload = () => {
-                const maxWidth = 200; // Maximum width for the uploaded image
-                const maxHeight = 200; // Maximum height for the uploaded image
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.src = e.target.result;
 
-                let imgWidth = img.width;
-                let imgHeight = img.height;
+        img.onload = () => {
+  // Draw the image to fit the frame dimensions exactly
+  const imgX = frameX; // Align with the frame's X position
+  const imgY = frameY; // Align with the frame's Y position
 
-                if (imgWidth > maxWidth || imgHeight > maxHeight) {
-                  const widthRatio = maxWidth / imgWidth;
-                  const heightRatio = maxHeight / imgHeight;
-                  const scaleRatio = Math.min(widthRatio, heightRatio);
+  // Stretch the image to match the frame dimensions
+  ctx.drawImage(img, imgX, imgY, frameWidth, frameHeight);
 
-                  imgWidth *= scaleRatio;
-                  imgHeight *= scaleRatio;
-                }
-                // Add text
-                const x = (canvas.width - imgWidth) / 2;
-                const y = 500; // Adjusted Y-coordinate for image placement
+  // Display Name below the frame
+  const textX = canvas.width / 2 - 210; // Adjust horizontal alignment for text
 
-                // Draw the user image on the canvas
-                ctx.drawImage(img, x, y, imgWidth, imgHeight);
+// Display Name below the frame
+const textY = frameY + frameHeight + 30; // Adjust vertical position for name
+ctx.font = "bold 30px Georgia"; // Use a standard font like Georgia
+ctx.fillStyle = "#333"; // Dark gray text
+ctx.textAlign = "center";
+ctx.fillText(`${name}`, textX, textY);
 
-                // Add text
-                ctx.font = "20px Arial";
-                ctx.fillStyle = "#333";
-                ctx.textAlign = "center"; // Center-align text
-                ctx.fillText(`${name}`, canvas.width / 2, 950);
-                ctx.fillText(`${panchayat}`, canvas.width / 2, 980 );
-                // Enable download link
-                downloadLink.href = canvas.toDataURL("image/png");
-              };
-            };
-            reader.readAsDataURL(imageFile);
-          };
-        } else {
-          posterForm.reportValidity();
-        }
-      });
+// Display Panchayat below the name
+const panchayatY = textY + 30; // Decrease space between name and panchayat
+ctx.font = "24px Arial"; // Slightly smaller font for panchayat
+ctx.fillText(`${panchayat}`, textX, panchayatY);
+
+  downloadLink.href = canvas.toDataURL("image/png");
+};
+      };
+      reader.readAsDataURL(imageFile);
+    };
+  } else {
+    posterForm.reportValidity();
+  }
+});
     </script>
+    
   </body>
 </html>
