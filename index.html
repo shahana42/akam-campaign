@@ -1,278 +1,163 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Campaign Poster Creator</title>
-<style>
-  body {
-    font-family: "Arial", sans-serif;
-    background-color: #a1d6e2;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 10px;
-  }
+    <title>Personalized Poster Creator</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #a1d6e2;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 10px;
+      }
 
-  .container {
-    background-color: white;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 20px;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-    padding: 10px;
-    height: auto;
-  }
+      .container {
+        background-color: white;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 20px;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        padding: 10px;
+        height: auto;
+      }
 
-  .header {
-    text-align: center;
-    height: 250px;
-  }
+      .header {
+        text-align: center;
+        height: 250px;
+      }
 
-  .header img {
-    width: 100%;
-    border-radius: 10px;
-    height: 100%;
-    object-fit: cover;
-  }
+      .header img {
+        width: 100%;
+        border-radius: 10px;
+        height: 100%;
+        object-fit: cover;
+      }
 
-  .content {
-    padding: 20px;
-    text-align: center;
-  }
+      .content {
+        padding: 20px;
+        text-align: center;
+      }
 
-  .content h2 {
-    font-size: 18px;
-    color: #333;
-    margin: 10px 0;
-  }
+      .content h2 {
+        font-size: 18px;
+        color: #333;
+        margin: 10px 0;
+      }
 
-  .content p {
-    font-size: 16px;
-    color: #555;
-    margin: 10px 0;
-  }
+      .content p {
+        font-size: 16px;
+        color: #555;
+        margin: 10px 0;
+      }
 
-  .content input {
-    width: 90%;
-    padding: 12px 15px;
-    margin: 10px 0;
-    border: 2px solid #ddd;
-    border-radius: 30px;
-    font-size: 16px;
-    outline: none;
-    text-align: center;
-    transition: border-color 0.3s ease;
-  }
+      .content input {
+        width: 90%;
+        padding: 12px 15px;
+        margin: 10px 0;
+        border: 2px solid #ddd;
+        border-radius: 30px;
+        font-size: 16px;
+        outline: none;
+        text-align: center;
+        transition: border-color 0.3s ease;
+      }
 
-  .content input:focus {
-    border-color: #1995ad;
-  }
+      .content input:focus {
+        border-color: #1995ad;
+      }
 
-  .content button {
-    width: 100%;
-    padding: 12px;
-    background-color: #1995ad;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+      .content button {
+        width: 100%;
+        padding: 12px;
+        background-color: #1995ad;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-  .content button:hover {
-    background-color: #157788;
-  }
+      .content button:hover {
+        background-color: #157788;
+      }
 
-  .poster-preview {
-    margin-top: 20px;
-    text-align: center;
-  }
+      .poster-preview {
+        text-align: center;
+        margin: 20px 0;
+      }
 
-  .poster-preview canvas {
-    width: 100%;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-  }
+      .poster-container {
+        position: relative;
+        width: 100%;
+        height: 100%; /* Increased height for the poster container */
 
-  .poster-preview a {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #1995ad;
-    color: white;
-    text-decoration: none;
-    border-radius: 30px;
-    transition: background-color 0.3s ease;
-  }
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
 
-  .poster-preview a:hover {
-    background-color: #157788;
-  }
+      .poster-preview canvas {
+        width: 100%;
+        height: 100%; /* Ensure canvas stretches to fit container */
+        object-fit: contain;
+        display: block;
+      }
 
-  .hidden {
-    display: none;
-  }
+      .poster-preview a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #1995ad;
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        transition: background-color 0.3s ease;
+      }
 
-  .file-input {
-    padding: 10px 15px;
-    margin: 10px 0;
-    border-radius: 30px;
-    color: black;
-  }
+      .poster-preview a:hover {
+        background-color: #157788;
+      }
 
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
-  }
+      .hidden {
+        display: none;
+      }
 
-  .custom-file-upload {
-    display: inline-block;
-    position: relative;
-  }
+      .custom-file-upload {
+        display: inline-block;
+        position: relative;
+      }
 
-  .upload-button {
-    color: #1995ad;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 10px 20px;
-    border: 1px solid #1995ad;
-    border-radius: 5px;
-    text-align: center;
-    display: inline-block;
-    cursor: pointer;
-    margin-bottom: 10px;
-  }
+      .upload-button {
+        color: #1995ad;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 10px 20px;
+        border: 1px solid #1995ad;
+        border-radius: 5px;
+        text-align: center;
+        display: inline-block;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
 
-  .upload-button:hover {
-    background-color: #1995ad;
-    color: white;
-  }
+      .upload-button:hover {
+        background-color: #1995ad;
+        color: white;
+      }
 
-  .file-input {
-    display: none;
-  }
-
-  /* Responsive Styles for Tablets and Larger Screens */
-  @media (max-width: 1024px) {
-    .container {
-      width: 90%;
-      padding: 20px;
-    }
-
-    .header {
-      height: 250px;
-    }
-
-    .header img {
-      height: 100%;
-    }
-
-    .content h2 {
-      font-size: 16px;
-    }
-
-    .content p {
-      font-size: 14px;
-    }
-
-    .content input {
-      font-size: 14px;
-      padding: 10px;
-    }
-
-    .content button {
-      font-size: 14px;
-    }
-
-    .poster-preview canvas {
-      border-radius: 8px;
-    }
-
-    .poster-preview a {
-      font-size: 14px;
-      padding: 8px 16px;
-    }
-  }
-
-  /* Responsive Styles for Small Screens (Mobile) */
-  @media (max-width: 768px) {
-    .container {
-      width: 95%;
-      height: auto;
-      padding: 20px;
-    }
-
-    .header {
-      height: 180px;
-    }
-
-    .header img {
-      height: 100%;
-    }
-
-    .content h2 {
-      font-size: 14px;
-    }
-
-    .content p {
-      font-size: 12px;
-    }
-
-    .content input {
-      font-size: 12px;
-      padding: 8px;
-    }
-
-    .content button {
-      font-size: 12px;
-    }
-
-    .poster-preview a {
-      font-size: 12px;
-      padding: 6px 12px;
-    }
-  }
-
-  /* Additional Styles for Extra Small Screens (Very Small Mobile) */
-  @media (max-width: 480px) {
-    .container {
-      width: 100%;
-      padding: 15px;
-    }
-
-    .header {
-      height: 150px;
-    }
-
-    .content h2 {
-      font-size: 14px;
-    }
-
-    .content p {
-      font-size: 12px;
-    }
-
-    .content input {
-      font-size: 12px;
-      padding: 8px;
-    }
-
-    .content button {
-      font-size: 12px;
-    }
-
-    .poster-preview a {
-      font-size: 12px;
-      padding: 6px 12px;
-    }
-  }
-</style>
-
+      .file-input {
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -282,10 +167,22 @@
           <img src="image/kmcc.jpg" alt="Campaign Banner" />
         </div>
         <h2>Create Personalized Poster to Support the Campaign</h2>
-        <p>KMCC ഖത്തർ മലപ്പുറം മണ്ഡലം സമ്മേളനം </p>
+        <p>KMCC ഖത്തർ മലപ്പുറം മണ്ഡലം സമ്മേളനം</p>
         <p>Create and download your poster with your own image</p>
-        <input type="text" id="nameInput" name="name" placeholder="Name" required />
-        <input type="text" id="panchayatInput" name="panchayat" placeholder="Panchayat" required />
+        <input
+          type="text"
+          id="nameInput"
+          name="name"
+          placeholder="Name"
+          required
+        />
+        <input
+          type="text"
+          id="panchayatInput"
+          name="panchayat"
+          placeholder="Panchayat"
+          required
+        />
         <div class="custom-file-upload">
           <label class="upload-button">
             Upload Image
@@ -306,13 +203,10 @@
 
       <!-- Poster Preview -->
       <div id="posterPage" class="content hidden">
-        <h2>Your Personalized Campaign Poster</h2>
-        <p>
-          Here is your personalized poster based on the information you
-          provided.
-        </p>
         <div class="poster-preview">
-          <canvas id="posterCanvas"></canvas>
+          <div class="poster-container">
+            <canvas id="posterCanvas"></canvas>
+          </div>
           <a id="downloadLink" download="personalized-poster.png"
             >Download Poster</a
           >
@@ -339,7 +233,6 @@
 
         // Validate the form
         if (!imageInput.files.length) {
-          // Image is not uploaded, show an error message
           errorMessage.textContent = "Please upload an image for the poster.";
           return;
         }
@@ -356,46 +249,57 @@
           // Set up the canvas
           const canvas = posterCanvas;
           const ctx = canvas.getContext("2d");
-          canvas.width = 400;
-          canvas.height = 600;
+          canvas.width = 1000; // Adjust to your preferred width
+          canvas.height = 1300; // Increased height for the poster
 
-          // Draw background
-          ctx.fillStyle = "#e3f6fd";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          // Load the background image (your uploaded image)
+          const background = new Image();
+          background.src = "image/Artboard_2.png"; // Replace with the correct file path
 
-          // Draw uploaded image
-          const reader = new FileReader();
+          background.onload = function () {
+            // Draw the background
+            ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-          reader.onload = function (e) {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = () => {
-              // Draw image onto the canvas
-              ctx.drawImage(img, 20, 20, canvas.width - 40, 200);
+            // Draw uploaded user image
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = new Image();
+              img.src = e.target.result;
+              img.onload = () => {
+                const maxWidth = 200; // Maximum width for the uploaded image
+                const maxHeight = 200; // Maximum height for the uploaded image
 
-              // Add text
-              ctx.font = "20px Arial";
-              ctx.fillStyle = "#333";
-              ctx.textAlign = "center";
-              ctx.fillText(
-                "അകം  संस्था  ക്യാമ്പയിൻ   2024 ഒക്ടോബർ  2025 ഫെബ്രുവരി ",
-                canvas.width / 2,
-                250
-              );
+                let imgWidth = img.width;
+                let imgHeight = img.height;
 
-              ctx.font = "18px Arial";
-              ctx.fillStyle = "#555";
-              ctx.fillText(`Name: ${name}`, canvas.width / 2, 300);
-              ctx.fillText(`Panchayath: ${panchayat}`, canvas.width / 2, 340);
+                if (imgWidth > maxWidth || imgHeight > maxHeight) {
+                  const widthRatio = maxWidth / imgWidth;
+                  const heightRatio = maxHeight / imgHeight;
+                  const scaleRatio = Math.min(widthRatio, heightRatio);
 
-              // Enable download link
-              downloadLink.href = canvas.toDataURL("image/png");
+                  imgWidth *= scaleRatio;
+                  imgHeight *= scaleRatio;
+                }
+                // Add text
+                const x = (canvas.width - imgWidth) / 2;
+                const y = 500; // Adjusted Y-coordinate for image placement
+
+                // Draw the user image on the canvas
+                ctx.drawImage(img, x, y, imgWidth, imgHeight);
+
+                // Add text
+                ctx.font = "20px Arial";
+                ctx.fillStyle = "#333";
+                ctx.textAlign = "center"; // Center-align text
+                ctx.fillText(`${name}`, canvas.width / 2, 950);
+                ctx.fillText(`${panchayat}`, canvas.width / 2, 980 );
+                // Enable download link
+                downloadLink.href = canvas.toDataURL("image/png");
+              };
             };
+            reader.readAsDataURL(imageFile);
           };
-
-          reader.readAsDataURL(imageFile);
         } else {
-          // Trigger HTML5 validation if form is not valid
           posterForm.reportValidity();
         }
       });
